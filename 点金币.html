@@ -469,6 +469,9 @@
         // pee();
         speedY = Math.ceil(10 * Math.random());
         speedX = Math.ceil(10 * Math.random()) - 5;
+
+        // 控制各色金币出现概率-----------------------------------------------------------------------------
+        var probabilityMax = 2000;
         var numRandom = Math.random() * 1000;
         if (disappearTime < 1200) {
             numRandom = Math.random() * 160;
@@ -480,11 +483,12 @@
         if (numRandom < 100) {
             newBox.style.backgroundColor = "black";
             newBox.style.color = "white";
-            newBox.style.border = "5px solid rgba(0, 0, 0, 0.6)";
             times = 2;
         } else if (numRandom >= 100 && numRandom < 120) {
             newBox.style.backgroundColor = "red";
             newBox.style.color = "white";
+            newBox.style.border = "1px solid black";
+            newBox.style.opacity = 0.3;
             times = 5;
         } else if (numRandom < 125) {
             newBox.style.backgroundColor = "orange";
@@ -504,6 +508,8 @@
             }
             addOneMore.isFirst = false;
         }
+
+
         maxY = Math.ceil(document.documentElement.clientHeight * Math.random() + 100);
         timer = setInterval(function () {
             newBox.innerHTML = "$";
