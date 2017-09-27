@@ -20,7 +20,7 @@
             position: fixed;
             left: 50%;
             bottom: 0;
-            transform: translate(-50%, 30%);
+            transform: translate(-50%, 18px);
         }
 
         .pee,
@@ -41,6 +41,10 @@
             text-align: center;
             cursor: pointer;
             box-shadow: 2px 3px 5px rgba(0, 0, 0, .6);
+        }
+        .pee {
+            z-index: 1000;
+            background-color: yellow;
         }
 
         #number::selection,
@@ -309,6 +313,7 @@
     <div id="gameOver">GAME OVER</div>
 </body>
 <script src="./myTools.js"></script>
+<script src="./main.js"></script>
 <script>
     var oBtn = $("#btn");
     var oBgNumber = $("#bgNumber");
@@ -346,6 +351,7 @@
     bind(oBtn, "mouseout", removeHelp);
     bind(oBtn, "mouseout", removeShow);
     bind(document, "mousedown", clearDefault);
+    console.log(oBox.offsetTop);
     function doShow() {
         oBtn.style.boxShadow = "2px 3px 10px rgba(0, 0, 0, .8)";
         oBtn.style.zIndex = "30";
@@ -471,6 +477,28 @@
         speedX = Math.ceil(10 * Math.random()) - 5;
 
         // 控制各色金币出现概率-----------------------------------------------------------------------------
+        var colorObj = {
+            yellow: {
+                probability: probabilityDistribution(2000, 800, 0.8, 0.1, disappearTime),
+                fn: yellowFn
+            },
+            black: {
+                probability: probabilityDistribution(2000, 800, 0.1, 0.5, disappearTime),
+                fn: blackFn
+            },
+            red: {
+                probability: probabilityDistribution(2000, 800, 0.03, 0.17, disappearTime),
+                fn: redFn
+            },
+            orange: {
+                probability: probabilityDistribution(2000, 800, 0.03, 0.03, disappearTime),
+                fn: orangeFn
+            },
+            green: {
+                probability: probabilityDistribution(2000, 800, 0.04, 0.2, disappearTime),
+                fn: greenFn
+            }
+        }
         var probabilityMax = 2000;
         var numRandom = Math.random() * 1000;
         if (disappearTime < 1200) {
@@ -627,5 +655,6 @@
     }
 
 </script>
+<script src="./page_init.js"></script>
 
 </html>
