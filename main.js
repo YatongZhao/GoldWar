@@ -1,3 +1,29 @@
+var oBtn = $("#btn");
+var oBgNumber = $("#bgNumber");
+var oNumber = $("#number");
+var oBox = $("#box");
+var oBox1 = $("#box1");
+var oBox2 = $("#box2");
+var oBox3 = $("#box3");
+var oBox4 = $("#box4");
+var oTime = $("#time");
+var oCombo = $("#combo");
+var oHelpGo = $("#helpGo");
+var oHelpAll1 = $("#helpAll1");
+var oHelpAll2 = $("#helpAll2");
+var oHelpDisappearTime = $("#helpDisappearTime");
+var oGameOver = $("#gameOver");
+var oOneMoreChance = $("#oneMoreChance");
+var numComboCount = 0;
+var countTime = 1;
+var disappearTime = 2000;
+// 记录现在页面上存在的$的个数，当countEnd为0时，游戏结束
+var countEnd = 1;
+// 计时器，记录游戏进行秒数
+var timer4 = null;
+var oneMorechance = 0;
+var maxSpeed = 10;
+
 /**
  * 清除页面默认鼠标点击事件
  * @param {*事件对象} e 
@@ -23,20 +49,20 @@ function probabilityDistribution(firstNum, lastNum, firstProbability, lastProbab
     newProbability = numX - firstNum;
     newProbability = newProbability / (lastNum - firstNum);
     newProbability = newProbability * (lastProbability - firstProbability);
-    newProbability = newProbability + lastProbability;
+    newProbability = newProbability + firstProbability;
     return newProbability;
 }
 /**
  * 根据传入的金币json对象,随机生成金币,并以相应初始化函数初始化金币对象
  * @param {*金币json对象} colorObj 
  */
-function colorProbability(colorObj) {
+function colorProbability(colorObj,newBox) {
     var randomNum = Math.random();
     var minProbability = 0;
     var maxProbability = 1;
     for (var color in colorObj) {
         var probability = colorObj[color]['probability'];
-        maxProbability = probability;
+        maxProbability = probability + minProbability;
         if (randomNum < maxProbability && randomNum >= minProbability && colorObj[color].fn) {
             colorObj[color].fn(newBox);
             colorObj[color].colorFn(newBox);
@@ -48,10 +74,21 @@ function colorProbability(colorObj) {
  * 各色金币特性的初始化函数
  */
 function yellowFn(obj) { }
-function blackFn(obj) { }
-function redFn(obj) { }
-function orangeFn(obj) { }
-function greenFn(obj) { }
+function blackFn(obj) {
+    obj.style.backgroundColor = "black";
+    obj.style.color = "white";
+}
+function redFn(obj) {
+    obj.style.backgroundColor = "red";
+    obj.style.color = "white";
+}
+function orangeFn(obj) {
+    obj.style.backgroundColor = "orange";
+}
+function greenFn(obj) {
+    obj.style.backgroundColor = "green";
+    obj.style.color = "white";
+}
 function initAll(obj) {
     obj.innerHTML = this.text;
     obj.className = this.className;
@@ -133,11 +170,10 @@ var colorObj = {
  * 金币标准初始化函数
  * 
  */
-function goldInit(obj) {
+function goldInit() {
     var newBox = document.createElement("div");
-    var maxSpeed = 10;
-    obj.appendChild(newBox);
-    colorProbability(colorObj);
+    oBox.appendChild(newBox);
+    colorProbability(colorObj,newBox);
 }
 /**
  * 金币点击后弹出金币个数控制函数
@@ -182,21 +218,27 @@ function getClientArea(ev) {
  */
 function fly(obj, speedX, speedY, arrLimits) {
     var timer = null;
+    var leftLimit = 0;
+    var rightLimit = 0;
+    var topLimit = 0;
+    leftLimit = Math.ceil(arrLimits[0] * (Math.random() + 0.5))/1.5;
+    rightLimit = Math.floor(arrLimits[1] * (Math.random() + 0.5))/1.5;
+    topLimit = Math.ceil(arrLimits[2] * (Math.random() + 0.5))/1.5;
     timer = setInterval(function () {
         obj.style.left = parseInt(getStyle(obj, "left")) + speedX + "px";
         obj.style.top = parseInt(getStyle(obj, "top")) - speedY + "px";
         if (
-            parseInt(getStyle(obj, "left")) <= arrLimits[0] ||
-            parseInt(getStyle(obj, "left")) >= arrLimits[1] ||
-            parseInt(getStyle(obj, "top")) <= arrLimits[2]
+            parseInt(getStyle(obj, "left")) <= leftLimit ||
+            parseInt(getStyle(obj, "left")) >= rightLimit ||
+            parseInt(getStyle(obj, "top")) <= topLimit
         ) {
-            if (parseInt(getStyle(obj, "left")) <= arrLimits[0]) {
-                parseInt(getStyle(obj, "left")) = arrLimits[0];
-            } else if (parseInt(getStyle(obj, "left")) >= arrLimits[1]) {
-                parseInt(getStyle(obj, "left")) = arrLimits[1];
-            } else {
-                parseInt(getStyle(obj, "top")) = arrLimits[2];
-            }
+            // if (parseInt(getStyle(obj, "left")) <= arrLimits[0]) {
+            //     obj.style.left = arrLimits[0];
+            // } else if (parseInt(getStyle(obj, "left")) >= arrLimits[1]) {
+            //     obj.style.left = arrLimits[1];
+            // } else {
+            //     obj.style.top = arrLimits[2];
+            // }
             clearInterval(timer);
             timer = setTimeout(function () {
                 obj.parentNode.removeChild(obj);
@@ -304,12 +346,12 @@ function gameGo() {
             timer = null;
             oBgNumber.innerHTML = "GO";
             oBtn.style.boxShadow = "none";
-            bind(oBox, "click", pee);
+            bind(oBox, "click", goldInit);
             bind(oBox, "click", addCombo);
             timeListener();
             goldenSeduce();
             timer3 = setTimeout(function () {
-                unbind(oBox, "click", pee);
+                unbind(oBox, "click", goldInit);
                 unbind(oBox, "click", seduce);
                 unbind(oBox, "mouseover", seduce);
                 unbind(oBox, "click", addCombo);
@@ -324,11 +366,59 @@ function gameGo() {
         jumpNumber(oBgNumber, 200, 60);
     }, 1000)
 }
+function addCombo() {
+    numComboCount++;
+    oCombo.getElementsByTagName("span")[0].innerHTML = numComboCount;
+    jumpNumber(oCombo.getElementsByTagName("span")[0], 160, 80);
+}
+function timeListener() {
+    timer4 = setInterval(function () {
+        countTime += 2;
+        oTime.getElementsByTagName("span")[0].innerHTML = countTime / 100;
+        disappearTime -= countTime / 5000 < 10 ? countTime / 5000 : 10;
+        // disappearTime -= 25 / 100;
+        if (disappearTime < 800) {
+            disappearTime = 800;
+        }
+    }, 20)
+}
 
-
-
-
-
+function jumpNumber(obj, bigFontSize, smallFontSize, fontChangeSpeed, speed) {
+    fontChangeSpeed = fontChangeSpeed || 20;
+    speed = speed || 10;
+    var timer2 = null;
+    timer2 = setInterval(function () {
+        obj.style.fontSize = bigFontSize + "px";
+        if (obj.innerHTML == "GO") {
+            obj.style.opacity = getStyle(obj, "opacity") - 0.1;
+        }
+        bigFontSize -= fontChangeSpeed;
+        speed -= 2;
+        if (bigFontSize == smallFontSize - fontChangeSpeed) {
+            clearInterval(timer2);
+            timer2 = null;
+        }
+    }, speed);
+}
+addOneMore.isFirst = true;
+function addOneMore() {
+    oneMorechance++;
+    oOneMoreChance.getElementsByTagName("span")[0].innerHTML = oneMorechance;
+    if (disappearTime > 1500) {
+        disappearTime += 10;
+    } else {
+        disappearTime += 1000;
+        if (disappearTime > 1500) {
+            disappearTime = 1500;
+        }
+    }
+}
+function goldenSeduce() {
+    oNumber.style.backgroundColor = "yellow";
+}
+function removeGoldenSeduce() {
+    oNumber.style.backgroundColor = "";
+}
 
 
 
