@@ -38,7 +38,8 @@ function colorProbability(colorObj) {
         var probability = colorObj[color]['probability'];
         maxProbability = probability;
         if (randomNum < maxProbability && randomNum >= minProbability && colorObj[color].fn) {
-            colorObj[color].fn();
+            colorObj[color].fn(newBox);
+            colorObj[color].colorFn(newBox);
         }
         minProbability = maxProbability;
     }
@@ -46,49 +47,97 @@ function colorProbability(colorObj) {
 /**
  * 各色金币特性的初始化函数
  */
-function yellowFn() { }
-function blackFn() { }
-function redFn() { }
-function orangeFn() { }
-function greenFn() { }
+function yellowFn(obj) { }
+function blackFn(obj) { }
+function redFn(obj) { }
+function orangeFn(obj) { }
+function greenFn(obj) { }
+function initAll(obj) {
+    obj.innerHTML = this.text;
+    obj.className = this.className;
+    for (var i = 0; i < this.click.length; i++) {
+        bind(obj, "click", this.click[i]);
+    }
+    var speedX = getSpeed(this.maxSpeed)[0];
+    var speedY = getSpeed(this.maxSpeed)[1];
+    fly(obj, speedX, speedY, goldDistanceLimits(obj.parentNode, obj));
+}
+var colorObj = {
+    yellow: {
+        probability: probabilityDistribution(2000, 800, 0.8, 0.1, disappearTime),
+        fn: initAll,
+        colorFn: yellowFn,
+        text: "$",
+        className: "pee",
+        click:[
+            function () { goldPee(1) },
+            seduce,
+            addCombo
+        ],
+        maxSpeed: maxSpeed
+    },
+    black: {
+        probability: probabilityDistribution(2000, 800, 0.1, 0.5, disappearTime),
+        fn: initAll,
+        colorFn: blackFn,
+        text: "$",
+        className: "pee",
+        click:[
+            function () { goldPee(1) },
+            seduce,
+            addCombo
+        ],
+        maxSpeed: maxSpeed
+    },
+    red: {
+        probability: probabilityDistribution(2000, 800, 0.03, 0.17, disappearTime),
+        fn: initAll,
+        colorFn: redFn,
+        text: "$",
+        className: "pee",
+        click:[
+            function () { goldPee(1) },
+            seduce,
+            addCombo
+        ],
+        maxSpeed: maxSpeed
+    },
+    orange: {
+        probability: probabilityDistribution(2000, 800, 0.03, 0.03, disappearTime),
+        fn: initAll,
+        colorFn: orangeFn,
+        text: "$",
+        className: "pee",
+        click:[
+            function () { goldPee(1) },
+            seduce,
+            addCombo
+        ],
+        maxSpeed: maxSpeed
+    },
+    green: {
+        probability: probabilityDistribution(2000, 800, 0.04, 0.2, disappearTime),
+        fn: initAll,
+        colorFn: greenFn,
+        text: "$",
+        className: "pee",
+        click:[
+            function () { goldPee(1) },
+            seduce,
+            addCombo
+        ],
+        maxSpeed: maxSpeed
+    }
+}
 /**
  * 金币标准初始化函数
  * 
  */
 function goldInit(obj) {
     var newBox = document.createElement("div");
-    newBox.colorObj = {
-        yellow: {
-            probability: probabilityDistribution(2000, 800, 0.8, 0.1, disappearTime),
-            fn: yellowFn
-        },
-        black: {
-            probability: probabilityDistribution(2000, 800, 0.1, 0.5, disappearTime),
-            fn: blackFn
-        },
-        red: {
-            probability: probabilityDistribution(2000, 800, 0.03, 0.17, disappearTime),
-            fn: redFn
-        },
-        orange: {
-            probability: probabilityDistribution(2000, 800, 0.03, 0.03, disappearTime),
-            fn: orangeFn
-        },
-        green: {
-            probability: probabilityDistribution(2000, 800, 0.04, 0.2, disappearTime),
-            fn: greenFn
-        }
-    }
-    newBox.className = "pee";
-    newBox.innerHTML = "$";
-    bind(newBox, "click", function () { goldPee(1) });
-    bind(newBox, "click", seduce);
-    bind(newBox, "click", addCombo);
-    obj.appendChild(newBox);
     var maxSpeed = 10;
-    var speedX = getSpeed(maxSpeed)[0];
-    var speedY = getSpeed(maxSpeed)[0];
-    fly(newBox, speedX, speedY, goldDistanceLimits(oBox, newBox));
+    obj.appendChild(newBox);
+    colorProbability(colorObj);
 }
 /**
  * 金币点击后弹出金币个数控制函数
@@ -156,7 +205,7 @@ function fly(obj, speedX, speedY, arrLimits) {
     }, 10);
 }
 /**
- * 根据最大速度值
+ * 根据最大速度值随机得到速度
  * @param {*最大速度值} maxSpeed 
  */
 function getSpeed(maxSpeed) {

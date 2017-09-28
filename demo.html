@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    var newBox = document.createElement("div");
+    newBox.colorObj = {
+        yellow: {
+            probability: 1,
+            fn: initAll,
+            colorFn: yellowFn,
+            text: "$"
+        },
+        black: {
+            probability: 1,
+            fn: initAll,
+            colorFn: blackFn,
+            text: "$"
+        },
+        red: {
+            probability: 1,
+            fn: initAll,
+            colorFn: redFn,
+            text: "$"
+        },
+        orange: {
+            probability: 1,
+            fn: initAll,
+            colorFn: orangeFn,
+            text: "$"
+        },
+        green: {
+            probability: 1,
+            fn: initAll,
+            colorFn: greenFn,
+            text: "$"
+        }
+    }
+    function yellowFn() { }
+    function blackFn() { }
+    function redFn() { }
+    function orangeFn() { }
+    function greenFn() { }
+    function initAll() {console.log(this) }
+    newBox.colorObj.green.fn();
+</script>
+
+</html>
