@@ -346,29 +346,19 @@
     // bind(document,"keydown",pee);
     // bind(document,"keydown",seduce);
     bind(oBtn, "click", gameGo);
-    bind(oBtn, "mouseover", doShow);
+    bind(oBtn, "mouseover", goBtnMouseOver);
     bind(oBtn, "mouseover", showHelp);
     bind(oBtn, "mouseout", removeHelp);
-    bind(oBtn, "mouseout", removeShow);
+    bind(oBtn, "mouseout", goBtnMouseOut);
     bind(document, "mousedown", clearDefault);
-    console.log(oBox.offsetTop);
-    function doShow() {
-        oBtn.style.boxShadow = "2px 3px 10px rgba(0, 0, 0, .8)";
-        oBtn.style.zIndex = "30";
-        oBtn.style.backgroundColor = "white";
-    }
-    function removeShow() {
-        oBtn.style.boxShadow = "2px 3px 5px rgba(0, 0, 0, .6)";
-        oBtn.style.zIndex = "";
-        oBtn.style.backgroundColor = "";
-    }
+
     function gameGo() {
         var timer = null;
         var count = 4;
-        removeShow();
+        goBtnMouseOut();
         unbind(oBtn, "click", gameGo);
-        unbind(oBtn, "mouseover", doShow);
-        unbind(oBtn, "mouseout", removeShow)
+        unbind(oBtn, "mouseover", goBtnMouseOver);
+        unbind(oBtn, "mouseout", goBtnMouseOut)
         unbind(oBtn, "mouseover", showHelp);
         unbind(oBtn, "mouseover", removeHelp);
         oHelpGo.style.display = "none";
@@ -420,25 +410,7 @@
             jumpNumber(oBgNumber, 200, 60);
         }, 1000)
     }
-    function seduce(e) {
-        e = e || event;
-        // e.cancelBubble = true;
-        var timer = null;
-        var count = 0;
-        timer = setInterval(function () {
-            if (count < 4) {
-                oBox.children[count].style.display = "block";
-            } else if (count < 8) {
-                oBox.children[count % 4].style.display = "none";
-            }
-            count++;
-            if (count == 8) {
-                clearInterval(timer);
-                timer = null;
-            }
-        }, 50)
 
-    }
     function goldenSeduce() {
         oNumber.style.backgroundColor = "yellow";
     }
@@ -477,28 +449,6 @@
         speedX = Math.ceil(10 * Math.random()) - 5;
 
         // 控制各色金币出现概率-----------------------------------------------------------------------------
-        var colorObj = {
-            yellow: {
-                probability: probabilityDistribution(2000, 800, 0.8, 0.1, disappearTime),
-                fn: yellowFn
-            },
-            black: {
-                probability: probabilityDistribution(2000, 800, 0.1, 0.5, disappearTime),
-                fn: blackFn
-            },
-            red: {
-                probability: probabilityDistribution(2000, 800, 0.03, 0.17, disappearTime),
-                fn: redFn
-            },
-            orange: {
-                probability: probabilityDistribution(2000, 800, 0.03, 0.03, disappearTime),
-                fn: orangeFn
-            },
-            green: {
-                probability: probabilityDistribution(2000, 800, 0.04, 0.2, disappearTime),
-                fn: greenFn
-            }
-        }
         var probabilityMax = 2000;
         var numRandom = Math.random() * 1000;
         if (disappearTime < 1200) {
@@ -515,8 +465,6 @@
         } else if (numRandom >= 100 && numRandom < 120) {
             newBox.style.backgroundColor = "red";
             newBox.style.color = "white";
-            newBox.style.border = "1px solid black";
-            newBox.style.opacity = 0.3;
             times = 5;
         } else if (numRandom < 125) {
             newBox.style.backgroundColor = "orange";
@@ -577,8 +525,8 @@
         bind(oBtn, "click", gameGo);
         bind(oBox, "click", seduce);
         bind(oBox, "mouseover", seduce);
-        bind(oBtn, "mouseover", doShow);
-        bind(oBtn, "mouseout", removeShow);
+        bind(oBtn, "mouseover", goBtnMouseOver);
+        bind(oBtn, "mouseout", goBtnMouseOut);
         bind(oBtn, "mouseover", showHelp);
         bind(oBtn, "mouseout", removeHelp);
         disappearTime = 2000;
@@ -606,22 +554,6 @@
                 disappearTime = 800;
             }
         }, 20)
-    }
-    // 清除默认行为
-    function clearDefault(e) {
-        e = e || event;
-        e.preventDefault && e.preventDefault();
-        e.returnValue && (e.returnValue = false);
-    }
-    function showHelp() {
-        oHelpGo.style.display = "block";
-        oHelpAll1.style.display = "block";
-        oHelpAll2.style.display = "block";
-    }
-    function removeHelp() {
-        oHelpGo.style.display = "none";
-        oHelpAll1.style.display = "none";
-        oHelpAll2.style.display = "none";
     }
     function jumpNumber(obj, bigFontSize, smallFontSize, fontChangeSpeed, speed) {
         fontChangeSpeed = fontChangeSpeed || 20;

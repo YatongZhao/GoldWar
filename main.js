@@ -1,4 +1,13 @@
 /**
+ * 清除页面默认鼠标点击事件
+ * @param {*事件对象} e 
+ */
+function clearDefault(e) {
+    e = e || event;
+    e.preventDefault && e.preventDefault();
+    e.returnValue && (e.returnValue = false);
+}
+/**
  * 根据在一个范围内变化的数值,控制概率线性变化
  * @param {*数值变化初始值} firstNum 
  * @param {*数值变化末尾值} lastNum 
@@ -16,23 +25,6 @@ function probabilityDistribution(firstNum, lastNum, firstProbability, lastProbab
     newProbability = newProbability * (lastProbability - firstProbability);
     newProbability = newProbability + lastProbability;
     return newProbability;
-}
-var colorObj = {
-    yellow: {
-        probability:probabilityDistribution(2000, 800, 0.8, 0.1, disappearTime),
-        fn:yellowFn },
-    black: {
-        probability:probabilityDistribution(2000, 800, 0.1, 0.5, disappearTime),
-        fn:blackFn},
-    red: {
-        probability:probabilityDistribution(2000, 800, 0.03, 0.17, disappearTime),
-        fn:redFn},
-    orange: {
-        probability:probabilityDistribution(2000, 800, 0.03, 0.03, disappearTime),
-        fn:orangeFn},
-    green: {
-        probability:probabilityDistribution(2000, 800, 0.04, 0.2, disappearTime),
-        fn:greenFn}
 }
 /**
  * 根据传入的金币json对象,随机生成金币,并以相应初始化函数初始化金币对象
@@ -67,20 +59,25 @@ function goldInit(obj) {
     var newBox = document.createElement("div");
     newBox.colorObj = {
         yellow: {
-            probability:probabilityDistribution(2000, 800, 0.8, 0.1, disappearTime),
-            fn:yellowFn },
+            probability: probabilityDistribution(2000, 800, 0.8, 0.1, disappearTime),
+            fn: yellowFn
+        },
         black: {
-            probability:probabilityDistribution(2000, 800, 0.1, 0.5, disappearTime),
-            fn:blackFn},
+            probability: probabilityDistribution(2000, 800, 0.1, 0.5, disappearTime),
+            fn: blackFn
+        },
         red: {
-            probability:probabilityDistribution(2000, 800, 0.03, 0.17, disappearTime),
-            fn:redFn},
+            probability: probabilityDistribution(2000, 800, 0.03, 0.17, disappearTime),
+            fn: redFn
+        },
         orange: {
-            probability:probabilityDistribution(2000, 800, 0.03, 0.03, disappearTime),
-            fn:orangeFn},
+            probability: probabilityDistribution(2000, 800, 0.03, 0.03, disappearTime),
+            fn: orangeFn
+        },
         green: {
-            probability:probabilityDistribution(2000, 800, 0.04, 0.2, disappearTime),
-            fn:greenFn}
+            probability: probabilityDistribution(2000, 800, 0.04, 0.2, disappearTime),
+            fn: greenFn
+        }
     }
     newBox.className = "pee";
     newBox.innerHTML = "$";
@@ -91,7 +88,7 @@ function goldInit(obj) {
     var maxSpeed = 10;
     var speedX = getSpeed(maxSpeed)[0];
     var speedY = getSpeed(maxSpeed)[0];
-    fly(newBox,speedX,speedY,goldDistanceLimits(oBox, newBox));
+    fly(newBox, speedX, speedY, goldDistanceLimits(oBox, newBox));
 }
 /**
  * 金币点击后弹出金币个数控制函数
@@ -113,10 +110,10 @@ function goldDistanceLimits(oBox, gold) {
     var limitLeft = 0;
     var limitRight = 0;
     var limitTop = 0;
-    limitLeft = - ((getClientArea()[0] / 2) - (parseInt(getStyle(oBox,"width")) / 2) - (parseInt(getStyle(gold,"width")) / 2));
-    limitRight = (getClientArea()[0] / 2) + (parseInt(getStyle(oBox,"width")) / 2 - (parseInt(getStyle(gold,"width")) / 2));
-    limitTop = -(getClientArea()[1] - parseInt(getStyle(oBox,"height")) - (parseInt(getStyle(gold,"height")) / 2) + 18);
-    return [limitLeft,limitRight,limitTop];
+    limitLeft = - ((getClientArea()[0] / 2) - (parseInt(getStyle(oBox, "width")) / 2) - (parseInt(getStyle(gold, "width")) / 2));
+    limitRight = (getClientArea()[0] / 2) + (parseInt(getStyle(oBox, "width")) / 2 - (parseInt(getStyle(gold, "width")) / 2));
+    limitTop = -(getClientArea()[1] - parseInt(getStyle(oBox, "height")) - (parseInt(getStyle(gold, "height")) / 2) + 18);
+    return [limitLeft, limitRight, limitTop];
 }
 /**
  * 获取可视区大小函数
@@ -128,41 +125,184 @@ function getClientArea(ev) {
     var clientH = 0;
     clientW = document.documentElement.clientWidth;
     clientH = document.documentElement.clientHeight;
-    return [clientW,clientH];
+    return [clientW, clientH];
 }
 /**
  * 
  * @param {*需要飞行的对象} obj 
  */
-function fly(obj,speedX,speedY,arrLimits) {
+function fly(obj, speedX, speedY, arrLimits) {
     var timer = null;
     timer = setInterval(function () {
-        obj.style.left = parseInt(getStyle(obj,"left")) + speedX + "px";
-        obj.style.top = parseInt(getStyle(obj,"top")) - speedY + "px";
+        obj.style.left = parseInt(getStyle(obj, "left")) + speedX + "px";
+        obj.style.top = parseInt(getStyle(obj, "top")) - speedY + "px";
         if (
-            parseInt(getStyle(obj,"left")) <= arrLimits[0] ||
-            parseInt(getStyle(obj,"left")) >= arrLimits[1] ||
-            parseInt(getStyle(obj,"top")) <= arrLimits[2]
+            parseInt(getStyle(obj, "left")) <= arrLimits[0] ||
+            parseInt(getStyle(obj, "left")) >= arrLimits[1] ||
+            parseInt(getStyle(obj, "top")) <= arrLimits[2]
         ) {
-            if (parseInt(getStyle(obj,"left")) <= arrLimits[0]) {
-                parseInt(getStyle(obj,"left")) = arrLimits[0];
-            } else if (parseInt(getStyle(obj,"left")) >= arrLimits[1]) {
-                parseInt(getStyle(obj,"left")) = arrLimits[1];
+            if (parseInt(getStyle(obj, "left")) <= arrLimits[0]) {
+                parseInt(getStyle(obj, "left")) = arrLimits[0];
+            } else if (parseInt(getStyle(obj, "left")) >= arrLimits[1]) {
+                parseInt(getStyle(obj, "left")) = arrLimits[1];
             } else {
-                parseInt(getStyle(obj,"top")) = arrLimits[2];
+                parseInt(getStyle(obj, "top")) = arrLimits[2];
             }
             clearInterval(timer);
             timer = setTimeout(function () {
                 obj.parentNode.removeChild(obj);
-            },2000);
+            }, 2000);
         }
-    },10);
+    }, 10);
 }
+/**
+ * 根据最大速度值
+ * @param {*最大速度值} maxSpeed 
+ */
 function getSpeed(maxSpeed) {
     var speedX = Math.round(Math.random() * maxSpeed * 2) - 10;
-    var speedY = Math.round(Math.random() * maxSpeed);
-    return [speedX,speedY];
+    var speedY = Math.ceil(Math.random() * maxSpeed);
+    return [speedX, speedY];
 }
+/**
+ * 开始按钮鼠标移上效果
+ */
+function goBtnMouseOver() {
+    oBtn.style.boxShadow = "2px 3px 10px rgba(0, 0, 0, .8)";
+    oBtn.style.zIndex = "30";
+    oBtn.style.backgroundColor = "white";
+}
+/**
+ * 开始按钮鼠标移开效果
+ */
+function goBtnMouseOut() {
+    oBtn.style.boxShadow = "2px 3px 5px rgba(0, 0, 0, .6)";
+    oBtn.style.zIndex = "";
+    oBtn.style.backgroundColor = "";
+}
+/**
+ * 显示游戏开始提示
+ */
+function showHelp() {
+    oHelpGo.style.display = "block";
+    oHelpAll1.style.display = "block";
+    oHelpAll2.style.display = "block";
+}
+/**
+ * 移出游戏开始提示
+ */
+function removeHelp() {
+    oHelpGo.style.display = "none";
+    oHelpAll1.style.display = "none";
+    oHelpAll2.style.display = "none";
+}
+/**
+ * 吐金币按钮吐金币时的特效
+ * @param {*事件对象} e 
+ */
+function seduce(e) {
+    e = e || event;
+    var timer = null;
+    var count = 0;
+    timer = setInterval(function () {
+        if (count < 4) {
+            oBox.children[count].style.display = "block";
+        } else if (count < 8) {
+            oBox.children[count % 4].style.display = "none";
+        }
+        count++;
+        if (count == 8) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }, 50)
+}
+function gameGo() {
+    var timer = null;
+    var count = 4;
+    goBtnMouseOut();
+    unbind(oBtn, "click", gameGo);
+    unbind(oBtn, "mouseover", goBtnMouseOver);
+    unbind(oBtn, "mouseout", goBtnMouseOut)
+    unbind(oBtn, "mouseover", showHelp);
+    unbind(oBtn, "mouseover", removeHelp);
+    oHelpGo.style.display = "none";
+    oHelpAll1.style.display = "none";
+    oHelpAll2.style.display = "none";
+    oGameOver.style.display = "none";
+    oBtn.value = "";
+
+    oBgNumber.innerHTML = 5;
+    var fontSize = 200;
+    var timer2 = null;
+    // 倒计时第一个数字效果
+    timer2 = setInterval(function () {
+        oBgNumber.style.fontSize = fontSize + "px";
+        fontSize -= 20;
+        if (fontSize == 40) {
+            clearInterval(timer2);
+            timer2 = null;
+        }
+    }, 10);
+
+    timer = setInterval(function () {
+        var timer3 = null;
+        var speed = 10;
+        oBgNumber.innerHTML = count;
+        count--;
+        if (count == -1) {
+            clearInterval(timer);
+            timer = null;
+            oBgNumber.innerHTML = "GO";
+            oBtn.style.boxShadow = "none";
+            bind(oBox, "click", pee);
+            bind(oBox, "click", addCombo);
+            timeListener();
+            goldenSeduce();
+            timer3 = setTimeout(function () {
+                unbind(oBox, "click", pee);
+                unbind(oBox, "click", seduce);
+                unbind(oBox, "mouseover", seduce);
+                unbind(oBox, "click", addCombo);
+                removeGoldenSeduce();
+                if (countEnd == 1) {
+                    // 解决开局不点击游戏无法到达出口bug
+                    // 第二个出口--------------------------------
+                    ending();
+                }
+            }, 3000)
+        }
+        jumpNumber(oBgNumber, 200, 60);
+    }, 1000)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * 游戏主体函数
  * @param {*} e 
@@ -188,7 +328,7 @@ function getSpeed(maxSpeed) {
 
 
 
- 
+
 // function pee(e) {
 //     e = e || event;
 //     countEnd++;
