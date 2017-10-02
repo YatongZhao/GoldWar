@@ -313,7 +313,9 @@
     <div id="gameOver">GAME OVER</div>
 </body>
 <script src="./myTools.js"></script>
+<script src="./page_init.js"></script>
 <script src="./main.js"></script>
+<script src="./colorJson.js"></script>
 <script>
     // var oBtn = $("#btn");
     // var oBgNumber = $("#bgNumber");
@@ -340,11 +342,8 @@
     // var timer4 = null;
     // var oneMorechance = 0;
     // 记录续命金币被点击的次数
-    // bind(oBox,"click",pee);
     bind(oBox, "click", seduce);
     bind(oBox, "mouseover", seduce);
-    // bind(document,"keydown",pee);
-    // bind(document,"keydown",seduce);
     bind(oBtn, "click", gameGo);
     bind(oBtn, "mouseover", goBtnMouseOver);
     bind(oBtn, "mouseover", showHelp);
@@ -514,73 +513,71 @@
     //         }
     //     }, 10)
     // }
-    function ending() {
-        clearInterval(timer4);
-        bind(oBtn, "click", gameGo);
-        bind(oBox, "click", seduce);
-        bind(oBox, "mouseover", seduce);
-        bind(oBtn, "mouseover", goBtnMouseOver);
-        bind(oBtn, "mouseout", goBtnMouseOut);
-        bind(oBtn, "mouseover", showHelp);
-        bind(oBtn, "mouseout", removeHelp);
-        disappearTime = 2000;
-        countEnd = 1;
-        countTime = 1;
-        numComboCount = 0;
-        oBgNumber.style.opacity = 1;
-        oGameOver.style.display = "block";
-        jumpNumber(oGameOver, 0, 80, -2, 5);
-        oBgNumber.innerHTML = "";
-        oBtn.value = "GO";
-    }
-    function addCombo() {
-        numComboCount++;
-        oCombo.getElementsByTagName("span")[0].innerHTML = numComboCount;
-        jumpNumber(oCombo.getElementsByTagName("span")[0], 160, 80);
-    }
-    function timeListener() {
-        timer4 = setInterval(function () {
-            countTime += 2;
-            oTime.getElementsByTagName("span")[0].innerHTML = countTime / 100;
-            disappearTime -= countTime / 5000 < 10 ? countTime / 5000 : 10;
-            // disappearTime -= 25 / 100;
-            if (disappearTime < 800) {
-                disappearTime = 800;
-            }
-        }, 20)
-    }
-    function jumpNumber(obj, bigFontSize, smallFontSize, fontChangeSpeed, speed) {
-        fontChangeSpeed = fontChangeSpeed || 20;
-        speed = speed || 10;
-        var timer2 = null;
-        timer2 = setInterval(function () {
-            obj.style.fontSize = bigFontSize + "px";
-            if (obj.innerHTML == "GO") {
-                obj.style.opacity = getStyle(obj, "opacity") - 0.1;
-            }
-            bigFontSize -= fontChangeSpeed;
-            speed -= 2;
-            if (bigFontSize == smallFontSize - fontChangeSpeed) {
-                clearInterval(timer2);
-                timer2 = null;
-            }
-        }, speed);
-    }
-    addOneMore.isFirst = true;
-    function addOneMore() {
-        oneMorechance++;
-        oOneMoreChance.getElementsByTagName("span")[0].innerHTML = oneMorechance;
-        if (disappearTime > 1500) {
-            disappearTime += 10;
-        } else {
-            disappearTime += 1000;
-            if (disappearTime > 1500) {
-                disappearTime = 1500;
-            }
-        }
-    }
+    // function ending() {
+    //     clearInterval(timer4);
+    //     bind(oBtn, "click", gameGo);
+    //     bind(oBox, "click", seduce);
+    //     bind(oBox, "mouseover", seduce);
+    //     bind(oBtn, "mouseover", goBtnMouseOver);
+    //     bind(oBtn, "mouseout", goBtnMouseOut);
+    //     bind(oBtn, "mouseover", showHelp);
+    //     bind(oBtn, "mouseout", removeHelp);
+    //     disappearTime = 2000;
+    //     countEnd = 1;
+    //     countTime = 1;
+    //     numComboCount = 0;
+    //     oBgNumber.style.opacity = 1;
+    //     oGameOver.style.display = "block";
+    //     jumpNumber(oGameOver, 0, 80, -2, 5);
+    //     oBgNumber.innerHTML = "";
+    //     oBtn.value = "GO";
+    // }
+    // function addCombo() {
+    //     numComboCount++;
+    //     oCombo.getElementsByTagName("span")[0].innerHTML = numComboCount;
+    //     jumpNumber(oCombo.getElementsByTagName("span")[0], 160, 80);
+    // }
+    // function timeListener() {
+    //     timer4 = setInterval(function () {
+    //         countTime += 2;
+    //         oTime.getElementsByTagName("span")[0].innerHTML = countTime / 100;
+    //         disappearTime -= countTime / 5000 < 10 ? countTime / 5000 : 10;
+    //         if (disappearTime < 800) {
+    //             disappearTime = 800;
+    //         }
+    //     }, 20)
+    // }
+    // function jumpNumber(obj, bigFontSize, smallFontSize, fontChangeSpeed, speed) {
+    //     fontChangeSpeed = fontChangeSpeed || 20;
+    //     speed = speed || 10;
+    //     var timer2 = null;
+    //     timer2 = setInterval(function () {
+    //         obj.style.fontSize = bigFontSize + "px";
+    //         if (obj.innerHTML == "GO") {
+    //             obj.style.opacity = getStyle(obj, "opacity") - 0.1;
+    //         }
+    //         bigFontSize -= fontChangeSpeed;
+    //         speed -= 2;
+    //         if (bigFontSize == smallFontSize - fontChangeSpeed) {
+    //             clearInterval(timer2);
+    //             timer2 = null;
+    //         }
+    //     }, speed);
+    // }
+    // addOneMore.isFirst = true;
+    // function addOneMore() {
+    //     oneMorechance++;
+    //     oOneMoreChance.getElementsByTagName("span")[0].innerHTML = oneMorechance;
+    //     if (disappearTime > 1500) {
+    //         disappearTime += 10;
+    //     } else {
+    //         disappearTime += 1000;
+    //         if (disappearTime > 1500) {
+    //             disappearTime = 1500;
+    //         }
+    //     }
+    // }
 
 </script>
-<script src="./page_init.js"></script>
 
 </html>
